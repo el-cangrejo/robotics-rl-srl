@@ -2,7 +2,6 @@ name: py35
 channels:
   - menpo
   - pytorch
-  - anaconda
   - defaults
 dependencies:
   - bleach=1.5.0=py35_0
