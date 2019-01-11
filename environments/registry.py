@@ -8,6 +8,7 @@ from environments.srl_env import SRLGymEnv
 from environments.kuka_gym.kuka_button_gym_env import KukaButtonGymEnv
 from environments.kuka_gym.kuka_rand_button_gym_env import KukaRandButtonGymEnv
 from environments.kuka_gym.kuka_2button_gym_env import Kuka2ButtonGymEnv
+from environments.kuka_gym.kuka_3blocks_gym_env import Kuka3BlocksGymEnv
 from environments.kuka_gym.kuka_moving_button_gym_env import KukaMovingButtonGymEnv
 from environments.mobile_robot.mobile_robot_env import MobileRobotGymEnv
 from environments.mobile_robot.mobile_robot_2target_env import MobileRobot2TargetGymEnv
@@ -42,6 +43,7 @@ registered_env = {
     "KukaButtonGymEnv-v0":            (KukaButtonGymEnv, SRLGymEnv, PlottingType.PLOT_3D, ThreadingType.PROCESS),
     "KukaRandButtonGymEnv-v0":        (KukaRandButtonGymEnv, KukaButtonGymEnv, PlottingType.PLOT_3D, ThreadingType.PROCESS),
     "Kuka2ButtonGymEnv-v0":           (Kuka2ButtonGymEnv, KukaButtonGymEnv, PlottingType.PLOT_3D, ThreadingType.PROCESS),
+    "Kuka3BlocksGymEnv-v0":           (Kuka3BlocksGymEnv, SRLGymEnv, PlottingType.PLOT_3D, ThreadingType.PROCESS),
     "KukaMovingButtonGymEnv-v0":      (KukaMovingButtonGymEnv, KukaButtonGymEnv, PlottingType.PLOT_3D, ThreadingType.PROCESS),
     "MobileRobotGymEnv-v0":           (MobileRobotGymEnv, SRLGymEnv, PlottingType.PLOT_2D, ThreadingType.PROCESS),
     "MobileRobot2TargetGymEnv-v0":    (MobileRobot2TargetGymEnv, MobileRobotGymEnv, PlottingType.PLOT_2D, ThreadingType.PROCESS),
