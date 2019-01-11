@@ -2,3 +2,6 @@
 	path = srl_zoo
 	branch = master
 	url = https://github.com/araffin/srl-zoo.git
+[submodule "world_model"]
+	path = world_model
+	url = https://github.com/el-cangrejo/world_model
