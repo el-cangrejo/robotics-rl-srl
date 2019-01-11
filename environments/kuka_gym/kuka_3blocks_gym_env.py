@@ -189,7 +189,7 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
             return self.srl_pipe[1][self.env_rank].get()
 
     def getTargetPos(self):
-        return self.blockr_pos
+        return self.blocks_pos[0]
 
     @staticmethod
     def getJointsDim():
