@@ -233,7 +233,7 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
             y_pos += 0.3 * self.np_random.uniform(-1, 1)
 
             urdf_file = "/urdf/" + blocks[i]
-            print(urdf_file)
+            #print(urdf_file)
             self.blocks_uid.append(p.loadURDF(urdf_file, [x_pos, y_pos, Z_TABLE]))
             self.blocks_pos.append(np.array([x_pos, y_pos, Z_TABLE]))
 
