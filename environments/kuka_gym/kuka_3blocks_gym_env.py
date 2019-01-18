@@ -18,8 +18,8 @@ MAX_STEPS = 1000  # WARNING: should be also change in __init__.py (timestep_limi
 N_CONTACTS_BEFORE_TERMINATION = 5
 # Terminate the episode if the arm is outside the safety sphere during too much time
 N_STEPS_OUTSIDE_SAFETY_SPHERE = 5000
-RENDER_HEIGHT = 224
-RENDER_WIDTH = 224
+RENDER_HEIGHT = 64
+RENDER_WIDTH = 64
 Z_TABLE = -0.2
 N_DISCRETE_ACTIONS = 6
 BUTTON_LINK_IDX = 1
@@ -233,7 +233,6 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
             y_pos += 0.3 * self.np_random.uniform(-1, 1)
 
             urdf_file = "/urdf/" + blocks[i]
-            print(urdf_file)
             self.blocks_uid.append(p.loadURDF(urdf_file, [x_pos, y_pos, Z_TABLE]))
             self.blocks_pos.append(np.array([x_pos, y_pos, Z_TABLE]))
 
@@ -432,7 +431,6 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
     def _reward(self):
         gripper_pos = self.getArmPos()
         distance = np.linalg.norm(self.blocks_pos[0] - gripper_pos, 2)
-        # print(distance)
 
         contact_points = p.getContactPoints(self.blocks_uid[0], self._kuka.kuka_uid, BUTTON_LINK_IDX)
         reward = int(len(contact_points) > 0)
