@@ -2,6 +2,8 @@
 *.swo
 *.swp
 
+*.mod
+
 # Custom
 .idea/
 *.txt
