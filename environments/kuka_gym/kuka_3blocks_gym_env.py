@@ -22,7 +22,7 @@ RENDER_HEIGHT = 64
 RENDER_WIDTH = 64
 Z_TABLE = -0.2
 N_DISCRETE_ACTIONS = 6
-BUTTON_LINK_IDX = 1
+BUTTON_LINK_IDX = 2
 BUTTON_GLIDER_IDX = 1  # Button glider joint
 DELTA_V = 0.03  # velocity per physics step.
 DELTA_V_CONTINUOUS = 0.0035  # velocity per physics step (for continuous actions).
@@ -225,16 +225,18 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
 
         # Initialize blocks position
         blocks = ["cube_small_r.urdf", "cube_small_g.urdf", "cube_small_b.urdf"]
+        x_pos = [0.6, 0.5, 0.4]
+        y_pos = [-0.1, 0.1, -0.2]
         for i in range(3):
-            x_pos = 0.5
-            y_pos = 0
+            # x_pos = 0.5
+            # y_pos = 0
 
-            x_pos += 0.15 * self.np_random.uniform(-1, 1)
-            y_pos += 0.3 * self.np_random.uniform(-1, 1)
+            # x_pos += 0.15 * self.np_random.uniform(-1, 1)
+            # y_pos += 0.3 * self.np_random.uniform(-1, 1)
 
             urdf_file = "/urdf/" + blocks[i]
-            self.blocks_uid.append(p.loadURDF(urdf_file, [x_pos, y_pos, Z_TABLE]))
-            self.blocks_pos.append(np.array([x_pos, y_pos, Z_TABLE]))
+            self.blocks_uid.append(p.loadURDF(urdf_file, [x_pos[i], y_pos[i], Z_TABLE]))
+            self.blocks_pos.append(np.array([x_pos[i], y_pos[i], Z_TABLE]))
 
         p.setGravity(0, 0, -10)
         self._kuka = kuka.Kuka(urdf_root_path=self._urdf_root, timestep=self._timestep,
@@ -273,8 +275,6 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
 
         self._observation = self.getExtendedObservation()
 
-        # self.blocks_pos[0] = np.array(p.getLinkState(self.blocks_uid[0], BUTTON_LINK_IDX)[0])
-        # self.blocks_pos[0] += BUTTON_DISTANCE_HEIGHT  # Set the target position on the top of the button
         if self.saver is not None:
             self.saver.reset(self._observation, self.getTargetPos(), self.getGroundTruth())
 
@@ -432,7 +432,7 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
         gripper_pos = self.getArmPos()
         distance = np.linalg.norm(self.blocks_pos[0] - gripper_pos, 2)
 
-        contact_points = p.getContactPoints(self.blocks_uid[0], self._kuka.kuka_uid, BUTTON_LINK_IDX)
+        contact_points = p.getContactPoints(self.blocks_uid[0], self._kuka.kuka_uid)
         reward = int(len(contact_points) > 0)
         self.n_contacts += reward
 
@@ -450,16 +450,16 @@ class Kuka3BlocksGymEnv(SRLGymEnv):
 
         if self._shape_reward:
             if self._is_discrete:
-                return -distance
+                reward = -distance
             else:
                 # Button pushed
                 if self.terminated and reward > 0:
-                    return 50
+                    reward = 50
                 # out of bounds
                 elif self.terminated and reward < 0:
-                    return -250
+                    reward = -250
                 # anything else
                 else:
-                    return -distance
+                    reward = -distance
 
         return reward
