@@ -15,6 +15,8 @@ from stable_baselines.common.policies import CnnPolicy
 
 from environments import ThreadingType
 from environments.registry import registered_env
+from environments.utils import sample_continuous_policy
+
 from srl_zoo.utils import printRed, printYellow
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # used to remove debug info of tensorflow
@@ -46,7 +48,7 @@ def env_thread(args, thread_num, partition=True, use_ppo2=False):
     env_kwargs = {
         "max_distance": args.max_distance,
         "random_target": args.random_target,
-        "force_down": True,
+        "force_down": False,
         "is_discrete": not args.continuous_actions,
         "renders": thread_num == 0 and args.display,
         "record_data": not args.no_record_data,
@@ -86,15 +88,20 @@ def env_thread(args, thread_num, partition=True, use_ppo2=False):
         obs = env.reset()
         done = False
         t = 0
+
+        if not use_ppo2:
+            actions_roll = sample_continuous_policy(env.action_space)
+
         while not done:
             env.render()
 
             if use_ppo2:
                 action, _ = model.predict([obs])
             else:
-                action = [env.action_space.sample()]
+                action = actions_roll[t]
 
-            _, _, done, _ = env.step(action[0])
+            print (action)
+            _, _, done, _ = env.step(action)
             frames += 1
             t += 1
             if done:
