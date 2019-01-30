@@ -6,6 +6,8 @@ import os
 from gym.envs.registration import registry, patch_deprecated_methods, load
 from stable_baselines import bench
 
+import numpy as np
+import math
 
 def dynamicEnvLoad(env_id):
     """
@@ -93,3 +95,20 @@ def _make(id_, env_kwargs=None):
                         max_episode_steps=env.spec.max_episode_steps,
                         max_episode_seconds=env.spec.max_episode_seconds)
     return env
+
+def sample_continuous_policy(action_space, seq_len=1000, dt=1./51):
+    """ Sample a continuous policy.
+    Atm, action_space is supposed to be a box environment. The policy is
+    sampled as a brownian motion a_{t+1} = a_t + sqrt(dt) N(0, 1).
+    :args action_space: gym action space
+    :args seq_len: number of actions returned
+    :args dt: temporal discretization
+    :returns: sequence of seq_len actions
+    """
+    actions = [action_space.sample()]
+    for _ in range(seq_len):
+        daction_dt = np.random.randn(*actions[-1].shape)
+        actions.append(
+            np.clip(actions[-1] + math.sqrt(dt) * daction_dt,
+                    action_space.low, action_space.high))
+    return actions
